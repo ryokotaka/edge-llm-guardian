@@ -17,12 +17,11 @@
 > reviewers can follow the chronological run log, tables, and evidence hashes
 > below, ending in the author's **Finding** and **Implication**.*
 
-> **Working doc.** This is the "question → measurement → finding → implication"
-> scaffold for the look-ahead investigation. The assistant fills *question* and
-> *measurement* (apparatus, protocol, plots, derived numbers). The **finding and
-> implication are written by the author** from the run data — the assistant does
-> not write them. Once the finding is backed by reproducible data, lift it into a
-> `## Findings` section of the README.
+> **Working doc.** The "question → measurement → finding → implication" log for the
+> look-ahead investigation. The *question* and *measurement* sections record the
+> apparatus, protocol, plots, and derived numbers as they were run; the **finding
+> and implication are the author's reading** of that data. Once a finding is backed
+> by reproducible data, it is lifted into the README.
 
 **Status (2026-06-20):** complete through three results — (1) a closed-loop
 measurement counterexample; (2) at matched Q4 time, the look-ahead thermal edge
@@ -86,7 +85,7 @@ Optional, to quantify τ cleanly: one open-loop heating run from cold under fixe
 Q8 load to the plateau (no switching), so the slope/τ estimate is not truncated
 by the switch.
 
-**Analysis** (assistant's lane — derives numbers and draws the plot; no claims):
+**Analysis** (derives numbers and draws the plot; no claims):
 
 ```bash
 python scripts/analyze_lookahead.py --temp-up 63 \
@@ -136,13 +135,6 @@ What this honestly says:
   not be run with the naive controller.
 - The controller was revised to bounded, upward-only look-ahead before the next
   experiment.
-
-Interview-safe phrasing:
-
-> A pilot falsified the naive predictive controller before I scaled the
-> experiment. Instead of hiding the negative result, I changed the controller to
-> require enough samples, ignore cold-region slope spikes, cap predicted
-> temperature rise, and keep Q4-to-Q8 recovery reactive.
 
 ## Bounded look-ahead smoke note (2026-06-18)
 
@@ -213,15 +205,6 @@ What this honestly says:
 - This is a useful counterexample, not a failure to hide: the control objective
   and the benchmark objective are coupled.
 
-Interview-safe phrasing:
-
-> I found a counterexample in my own follow-up experiment: early switching did
-> not automatically lower thermal exposure. Because my load generator was
-> closed-loop, moving to the faster Q4 path increased completed work, so the
-> thermal controller and benchmark design were coupled. That changed the next
-> question from "can I switch earlier?" to "what workload model is fair for
-> evaluating thermal control?"
-
 Next step if continuing this line:
 
 - For thermal-control evaluation, use an open-loop fixed arrival rate or fixed
@@ -231,7 +214,7 @@ Next step if continuing this line:
 
 ---
 
-_Apparatus update (assistant): the two open-loop modes this implication calls for
+_Apparatus update: the two open-loop modes this implication calls for
 are now in the harness — `--arrival-interval-sec` (fixed arrival rate, schedule-based
 dispatch) and the existing `--request-count` (equal total work). `analyze_lookahead.py`
 now also reports `completed_requests` per run, so the closed-loop coupling shows up in
